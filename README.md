@@ -1,10 +1,12 @@
 # next-door
 Geo-location base social network mobile application
 
-<img src="res/map.PNG" alt="Alt text" width="300" height="200"/>
-<img src="res/feed02.PNG" alt="Alt text" width="300" height="200"/>
 
 
+<p align="center">
+  <img src="res/map.PNG" alt="Map" width="337" height="600"/>
+  <img src="res/feed02.PNG" alt="Feed" width="337" height="600"/>
+</p>
 
 ## Set Up
 
