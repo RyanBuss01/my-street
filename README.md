@@ -22,4 +22,12 @@ flutter pub get
 
 ```
 
+create .env file and input network IP 
+.env:
+```
+
+IP = "localhost:3000"
+
+```
+
 run server: `node index.js`
