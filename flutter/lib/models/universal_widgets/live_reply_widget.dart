@@ -14,7 +14,12 @@ class LiveReplyWidget extends StatefulWidget {
   bool liveVisible;
   final Function onUpload;
   final Function onClose;
-  LiveReplyWidget({Key? key, required this.liveVisible, required this.onUpload, required this.onClose}) : super(key: key);
+  LiveReplyWidget(
+      {Key? key,
+      required this.liveVisible,
+      required this.onUpload,
+      required this.onClose})
+      : super(key: key);
 
   @override
   State<LiveReplyWidget> createState() => _LiveReplyWidgetState();
@@ -27,11 +32,8 @@ class _LiveReplyWidgetState extends State<LiveReplyWidget> {
 
   bool ready = false, liveVisible = false;
 
-
-
-
   Future takePicture(CameraController cam) async {
-    if(file == null) {
+    if (file == null) {
       final XFile image = await cam.takePicture();
       final Uint8List byteData = await image.readAsBytes();
       img.Image? originalImage = img.decodeImage(byteData);
@@ -50,9 +52,18 @@ class _LiveReplyWidgetState extends State<LiveReplyWidget> {
   }
 
   _initCam() async {
-    _cameraController = CameraController(selfieCamera, ResolutionPreset.medium, imageFormatGroup: ImageFormatGroup.yuv420,); /// Sets starting camera
-    await _cameraController.initialize(); /// initializes camera controller
-    await _cameraController.lockCaptureOrientation(DeviceOrientation.portraitUp);
+    _cameraController = CameraController(
+      selfieCamera,
+      ResolutionPreset.medium,
+      imageFormatGroup: ImageFormatGroup.yuv420,
+    );
+
+    /// Sets starting camera
+    await _cameraController.initialize();
+
+    /// initializes camera controller
+    await _cameraController
+        .lockCaptureOrientation(DeviceOrientation.portraitUp);
     setState(() => ready = true);
   }
 
@@ -65,11 +76,10 @@ class _LiveReplyWidgetState extends State<LiveReplyWidget> {
   @override
   didUpdateWidget(LiveReplyWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if(liveVisible != widget.liveVisible) {
+    if (liveVisible != widget.liveVisible) {
       setState(() => liveVisible = widget.liveVisible);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -77,13 +87,16 @@ class _LiveReplyWidgetState extends State<LiveReplyWidget> {
       children: [
         liveReplyScreen(),
         file != null ? replyScreen() : const SizedBox(),
-        liveVisible ? closeButton(callback: () => setState(() {
-            if(file != null) {
-              file = null;
-            } else {
-              widget.onClose();
-            }
-            }))  : const SizedBox()
+        liveVisible
+            ? closeButton(
+                callback: () => setState(() {
+                      if (file != null) {
+                        file = null;
+                      } else {
+                        widget.onClose();
+                      }
+                    }))
+            : const SizedBox()
       ],
     );
   }
@@ -99,8 +112,8 @@ class _LiveReplyWidgetState extends State<LiveReplyWidget> {
             SizedBox.expand(
                 child: GestureDetector(
                     onTap: () => setState(() {
-                      widget.onClose();
-                    }),
+                          widget.onClose();
+                        }),
                     child: Container(
                         color: Colors.black54,
                         child: Stack(
@@ -108,44 +121,35 @@ class _LiveReplyWidgetState extends State<LiveReplyWidget> {
                             Center(
                               child: SizedBox(
                                 width: 350,
-                                child: Builder(
-                                    builder: (context) {
-                                      if(ready) {
-                                        return ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                                40.0),
-                                            child: CameraPreview(_cameraController)
-                                        );
-                                      }
-                                      return const CircularProgressIndicator();
-                                    }
-                                ),
+                                child: Builder(builder: (context) {
+                                  if (ready) {
+                                    return ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(40.0),
+                                        child:
+                                            CameraPreview(_cameraController));
+                                  }
+                                  return const CircularProgressIndicator();
+                                }),
                               ),
                             ),
-                            Builder(
-                                builder: (context) {
-                                  if(ready) {
-                                    return Center(
-                                        child: SizedBox(
-                                            width: 350,
-                                            height: 350 *
-                                                _cameraController.value.aspectRatio,
-                                            child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(
-                                                    40.0),
-                                                child: const OverlayWithRectangleClipping()
-                                            )
-                                        )
-                                    );
-                                  }
-                                  return const SizedBox();
-                                }
-                            )
+                            Builder(builder: (context) {
+                              if (ready) {
+                                return Center(
+                                    child: SizedBox(
+                                        width: 350,
+                                        height: 350 *
+                                            _cameraController.value.aspectRatio,
+                                        child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(40.0),
+                                            child:
+                                                const OverlayWithRectangleClipping())));
+                              }
+                              return const SizedBox();
+                            })
                           ],
-                        )
-                    )
-                )
-            ),
+                        )))),
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
@@ -155,16 +159,13 @@ class _LiveReplyWidgetState extends State<LiveReplyWidget> {
                   width: 100,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 5)
-                  ),
+                      border: Border.all(color: Colors.white, width: 5)),
                   child: Center(
                     child: Container(
                       height: 80,
                       width: 80,
                       decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle
-                      ),
+                          color: Colors.white, shape: BoxShape.circle),
                       child: ClipOval(
                         child: Material(
                           color: Colors.transparent,
@@ -194,7 +195,6 @@ class _LiveReplyWidgetState extends State<LiveReplyWidget> {
               child: CircleAvatar(
                 radius: 175,
                 backgroundImage: FileImage(file!),
-
               ),
             ),
             SafeArea(
@@ -205,7 +205,10 @@ class _LiveReplyWidgetState extends State<LiveReplyWidget> {
                     child: IgnorePointer(
                       ignoring: file == null,
                       child: GestureDetector(
-                        onTap: () {widget.onUpload(file!); file = null;},
+                        onTap: () {
+                          widget.onUpload(file!);
+                          file = null;
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
@@ -214,16 +217,20 @@ class _LiveReplyWidgetState extends State<LiveReplyWidget> {
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 40
-                              ),
+                                  fontSize: 40),
                             ),
-                            SizedBox(width: 10,),
-                            Icon(Icons.double_arrow_outlined, color: Colors.white, size: 50,)
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(
+                              Icons.double_arrow_outlined,
+                              color: Colors.white,
+                              size: 50,
+                            )
                           ],
                         ),
                       ),
-                    )
-                ),
+                    )),
               ),
             )
           ],
